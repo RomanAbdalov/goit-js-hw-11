@@ -77,6 +77,43 @@ try {
 };
 };
 
+async function onSumbitLoadMore(event) {
+    onloadMoreButton.buttonState({
+        disabled: true,
+        loading: true,
+        isHiden: false,
+    });
+   try {
+    const response = await requestServer.onRequestServer();
+    const { hits, totalHits } = response.data;
+
+    refs.gallery.insertAdjacentHTML("beforeend", marcup(hits));
+    onloadMoreButton.buttonState({
+        isHiden: false,
+        disabled: false,
+        loading: false,
+    });
+
+    totalImagesUploaded += 40;
+    if (totalImagesUploaded >= totalHits) {
+        Notify.warning("We're sorry, but you've reached the end of search results.");
+        onloadMoreButton.buttonState({
+            isHiden: true,
+            disabled: true,
+        });
+    }
+    const { height: cardHeight } = document.querySelector(".gallery").firstElementChild.getBoundingClientRect();
+    window.scrollBy({
+        top: cardHeight * 2,
+        behavior: "smooth",
+    });
+const lightbox = new SimpleLightbox('.gallery a');
+lightbox.refresh();
+   } catch (error) {
+    console.log(error);
+   };
+}
+
 
 
 
