@@ -11,7 +11,13 @@ const refs = {
     loadMoreButton: document.querySelector('.load-more'),
     searchButton: document.querySelector('#search-form button'),
 };
-
+const requestServer = new RequestServer();
+const onloadMoreButton = new LoadMoreButton({
+    isHiden: true,
+    disabled: true,
+    loading: false,
+    buttonAdress: refs.loadMoreButton
+});
 
 
 
