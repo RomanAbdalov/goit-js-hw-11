@@ -34,7 +34,7 @@ async function onSubmitForm(event) {
     }
 refs.searchButton.disabled = true;
 requestServer.params.page = 0;
-refs.gallary.innerHTML = '';
+refs.gallery.innerHTML = '';
 onloadMoreButton.buttonState({
     isHiden: false,
     loading: true,
