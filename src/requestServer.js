@@ -11,10 +11,9 @@ export class RequestServer {
         page: 0,
         per_page: 40
     };
-
-    onRequestServer(query = this.params.q) {
+   onRequestServer(query = this.params.q) {
         this.params.q = query;
         this.params.page += 1;
         return axios.get(RequestServer.url, { params: this.params });
-    };
-};
+    }
+}
