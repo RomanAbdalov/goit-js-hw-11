@@ -18,100 +18,99 @@ const onloadMoreButton = new LoadMoreButton({
     loading: false,
     buttonAdress: refs.loadMoreButton
 });
-let totalImagesUploaded = 40;
+let totalImagesUploaded = 40;    
 
 onloadMoreButton.buttonState({});
 
-refs.form.addEventListener('submit', onSubmitForm);
+refs.form.addEventListener('submit', onSumbitForm);
 refs.loadMoreButton.addEventListener('click', onSumbitLoadMore);
 
-async function onSubmitForm(event) {
+async function onSumbitForm(event) {
     event.preventDefault();
     const { searchQuery } = event.currentTarget.elements;
     if (!searchQuery.value.trim()) {
         Notify.info('Please, enter data to search!');
         return;
     }
-refs.searchButton.disabled = true;
-requestServer.params.page = 0;
-refs.gallery.innerHTML = '';
-onloadMoreButton.buttonState({
-    isHiden: false,
-    loading: true,
-});
-
-try {
-    const response = await requestServer.onRequestServer(searchQuery.value);
-    const { hits, totalHits } = response.data;
-
-    if(!totalHits) {
-        Notify.failure("Sorry, there are no images matching your search query. Please try again.");
-    onloadMoreButton.buttonState({isHiden: true});
-
-    refs.searchButton.disabled = false;
-    return;
-    }
-
-    Notify.success(`Hooray! We found ${totalHits} images.`)
-    refs.gallery.insertAdjacentHTML("beforeend", markup(hits));
-    refs.searchButton.disabled = false;
+    refs.searchButton.disabled = true;
+    requestServer.params.page = 0;
+    refs.gallery.innerHTML = '';
+    onloadMoreButton.buttonState({
+        isHiden: false,
+        loading: true,
+    });
     
+    try {
+        const response = await requestServer.onRequestServer(searchQuery.value);
+        const { hits, totalHits } = response.data;
+        
+        if (!totalHits) {
+            Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+        onloadMoreButton.buttonState({isHiden: true});
+            refs.searchButton.disabled = false;
+            return;
+        }
 
-    const lightbox = new SimpleLightbox('.gallery a');
-    lightbox.refresh();
+        Notify.success(`Hooray! We found ${totalHits} images.`)
+        refs.gallery.insertAdjacentHTML("beforeend", markup(hits));
+        refs.searchButton.disabled = false;
+       
+        const lightbox = new SimpleLightbox('.gallery a');
+        lightbox.refresh();
 
-    if (totalHits <= 40) {
-        onloadMoreButton.buttonState({
-            isHiden: true,
-            disabled: true,
-        })
-    } else {
-        onloadMoreButton.buttonState({
+        if (totalHits <= 40) {
+            onloadMoreButton.buttonState({
+                isHiden: true,
+                disabled: true,
+            })
+        } else {
+            onloadMoreButton.buttonState({
             isHiden: false,
             disabled: false,
             loading: false,
-        });
-    }
-} catch(error) {
+                });
+        }  
+    } catch(error) {
     console.log(error);
-};
-};
+  };
+}
 
 async function onSumbitLoadMore(event) {
-    onloadMoreButton.buttonState({
+     onloadMoreButton.buttonState({
         disabled: true,
-        loading: true,
+         loading: true,
         isHiden: false,
-    });
-   try {
-    const response = await requestServer.onRequestServer();
-    const { hits, totalHits } = response.data;
-
-    refs.gallery.insertAdjacentHTML("beforeend", marcup(hits));
-    onloadMoreButton.buttonState({
+     });
+        try {
+        const response = await requestServer.onRequestServer();
+        const { hits, totalHits } = response.data;
+              
+        refs.gallery.insertAdjacentHTML("beforeend", markup(hits));
+        onloadMoreButton.buttonState({
         isHiden: false,
         disabled: false,
         loading: false,
-    });
-
-    totalImagesUploaded += 40;
-    if (totalImagesUploaded >= totalHits) {
-        Notify.warning("We're sorry, but you've reached the end of search results.");
-        onloadMoreButton.buttonState({
+        });
+            
+         totalImagesUploaded += 40;
+        if (totalImagesUploaded >= totalHits) {
+            Notify.warning("We're sorry, but you've reached the end of search results.");
+            onloadMoreButton.buttonState({
             isHiden: true,
             disabled: true,
-        });
-    }
-    const { height: cardHeight } = document.querySelector(".gallery").firstElementChild.getBoundingClientRect();
-    window.scrollBy({
+            }); 
+            }
+        const { height: cardHeight } = document.querySelector(".gallery").firstElementChild.getBoundingClientRect();
+        window.scrollBy({
         top: cardHeight * 2,
-        behavior: "smooth",
-    });
-const lightbox = new SimpleLightbox('.gallery a');
-lightbox.refresh();
-   } catch (error) {
-    console.log(error);
-   };
+         behavior: "smooth",
+        });
+        const lightbox = new SimpleLightbox('.gallery a');
+            lightbox.refresh();
+            
+    } catch (error) {
+        console.log(error);     
+  };
 }
 
 

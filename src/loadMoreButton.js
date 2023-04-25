@@ -1,6 +1,6 @@
 export class LoadMoreButton {
     constructor({ isHiden, disabled, loading, buttonAdress }) {
-        this.isHiden = isHiden;  
+        this.isHiden = isHiden;
         this.disabled = disabled;
         this.loading = loading;
         this.buttonAdress = buttonAdress;
